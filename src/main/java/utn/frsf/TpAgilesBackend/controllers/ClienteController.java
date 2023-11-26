@@ -18,7 +18,6 @@ import utn.frsf.TpAgilesBackend.repositories.ClienteRepository;
 import utn.frsf.TpAgilesBackend.specification.ClienteSpecification;
 
 @CrossOrigin
-
 @RestController
 public class ClienteController {
 

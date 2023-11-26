@@ -25,34 +25,34 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.ServletException;
-import utn.frsf.TpAgilesBackend.model.Cliente;
-import utn.frsf.TpAgilesBackend.repositories.ClienteRepository;
+import utn.frsf.TpAgilesBackend.model.Vendedor;
+import utn.frsf.TpAgilesBackend.repositories.VendedorRepository;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ClienteControllerTest {
-	
+public class VendedorControllerTest {
+
 	@Autowired
 	private MockMvc mockMvc;
 	
 	@Autowired
     private ObjectMapper objectMapper;
-	
+
 	@MockBean
-    private ClienteRepository clienteRepository;
-    	
+    private VendedorRepository vendedorRepository;
+	
 	@BeforeEach
     public void setUp() {
         // Configura el comportamiento del repositorio mock
-		when(clienteRepository.save(any(Cliente.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        when(clienteRepository.saveAndFlush(any(Cliente.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        when(clienteRepository.findById(any(Integer.class))).thenReturn(Optional.of(new Cliente()));
-        when(clienteRepository.findById(eq(4))).thenReturn(Optional.empty());
+		when(vendedorRepository.save(any(Vendedor.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(vendedorRepository.saveAndFlush(any(Vendedor.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(vendedorRepository.findById(any(Integer.class))).thenReturn(Optional.of(new Vendedor()));
+        when(vendedorRepository.findById(eq(4))).thenReturn(Optional.empty());
     }
-
+	
 	@Test
-	void TRAER_clientes() throws Exception {
-		mockMvc.perform( MockMvcRequestBuilders.get("/clientes"))
+	void TRAER_vendedores() throws Exception {
+		mockMvc.perform( MockMvcRequestBuilders.get("/vendedores"))
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers
 						.content()
@@ -60,18 +60,24 @@ public class ClienteControllerTest {
 	}
 	
 	@Test
-	void GUARDAR_clientes() throws Exception {
+	void GUARDAR_vendedores() throws Exception {
 		
-		Cliente cliente = new Cliente();
+		Vendedor vendedor = new Vendedor();
 		
-		cliente.setNombre("Esteban");
-		cliente.setApellido("Barolo");
+		vendedor.setNombre("Esteban");
+		vendedor.setApellido("Barolo");
+		vendedor.setEmail("esteba@gmail.com");
+		vendedor.setContraseña("la mas dificil");
+		vendedor.setEliminado(false);
+		vendedor.setNumeroDoc(4321);
+		vendedor.setTelefono(1234);
+		vendedor.setTipoDoc("DNI");
 
-        String clienteJson = objectMapper.writeValueAsString(cliente);
-        
-        mockMvc.perform(MockMvcRequestBuilders.post("/clientes")
+        String vendedorJson = objectMapper.writeValueAsString(vendedor);
+		
+        mockMvc.perform(MockMvcRequestBuilders.post("/vendedores")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(clienteJson))
+                .content(vendedorJson))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers
                 		.content()
@@ -79,8 +85,8 @@ public class ClienteControllerTest {
 	}
 	
 	@Test
-    void BUSCAR_clientes() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/clientes/search")
+    void BUSCAR_vendedores() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/vendedores/search")
                 .param("nombre", "Juan")
                 .param("apellido", "Perez")
                 .param("telefono", "123456789")
@@ -94,15 +100,22 @@ public class ClienteControllerTest {
     }
 	
 	@Test
-    void REEMPLAZAR_cliente() throws Exception {
-		Cliente cliente = new Cliente();
-		
-		cliente.setNombre("Esteban");
-		cliente.setApellido("Barolo");
+    void REEMPLAZAR_vendedores() throws Exception {
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/clientes/{id}", 1)
+		Vendedor vendedor = new Vendedor();
+		
+		vendedor.setNombre("Esteban");
+		vendedor.setApellido("Barolo");
+		vendedor.setEmail("esteba@gmail.com");
+		vendedor.setContraseña("la mas dificil");
+		vendedor.setEliminado(false);
+		vendedor.setNumeroDoc(54321);
+		vendedor.setTelefono(12345);
+		vendedor.setTipoDoc("DNI");
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/vendedores/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(cliente)))
+                .content(objectMapper.writeValueAsString(vendedor)))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers
                 		.content()
@@ -110,21 +123,24 @@ public class ClienteControllerTest {
     }
 	
 	@Test
-    void ELIMINAR_cliente() throws Exception {
-
+    public void testDeleteVendedor() throws Exception {
+    	
         List<Integer> idList = Arrays.asList(1, 2, 3);
 
-        mockMvc.perform(delete("/clientes")
+        // Realiza la solicitud DELETE y espera el código de estado 200 OK
+        mockMvc.perform(delete("/vendedores")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(idList)))
                 .andExpect(status().isOk());
+
         // Verifica que se lanzó una excepción para el ID 4
         assertThrows(ServletException.class, () -> {
-            mockMvc.perform(delete("/clientes")
+            mockMvc.perform(delete("/vendedores")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(Arrays.asList(4))))
             		.andExpect(status().isNotFound());
             });
+   
     }
 
 }
