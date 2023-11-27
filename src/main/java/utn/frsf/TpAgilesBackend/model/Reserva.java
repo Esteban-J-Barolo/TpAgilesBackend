@@ -27,7 +27,7 @@ public class Reserva {
 	public void generarPdf() {
 		try {
 			// Crear un objeto PdfWriter para escribir en el archivo PDF
-			PdfWriter writer = new PdfWriter(new File("venta.pdf"));
+			PdfWriter writer = new PdfWriter(new File("reserva.pdf"));
 
 			// Crear un objeto PdfDocument que representa el documento PDF
 			PdfDocument pdf = new PdfDocument(writer);
