@@ -11,6 +11,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import utn.frsf.TpAgilesBackend.enums.TipoInmueble;
 import utn.frsf.TpAgilesBackend.model.Inmueble;
+import utn.frsf.TpAgilesBackend.model.Provincia;
 
 public class InmuebleSpecification implements Specification<Inmueble>{
 
@@ -41,11 +42,11 @@ public class InmuebleSpecification implements Specification<Inmueble>{
 		List<Predicate> predicates = new ArrayList<>();
 
         if (provincia != null) {
-            predicates.add(builder.like(root.get("provincia"), "%" + provincia + "%"));
+            predicates.add(builder.like(root.get("provincia").get("provincia"), provincia ));
         }
 
         if (localidad != null) {
-            predicates.add(builder.like(root.get("localidad"), "%" + localidad + "%"));
+            predicates.add(builder.like(root.get("localidad").get("localidad"), localidad ));
         }
 
         if (barrio != null) {
@@ -60,8 +61,15 @@ public class InmuebleSpecification implements Specification<Inmueble>{
             predicates.add(builder.equal(root.get("dormitorios"), dormitorios));
         }
         
-        if (precioMin != null && precioMax != null) {
-        	predicates.add(builder.between(root.get("precio"), precioMin, precioMax));
+        if (precioMin != null || precioMax != null) {
+        	// condicion para cuando min es null
+        	if (precioMin != null && precioMax != null) {
+        		predicates.add(builder.between(root.get("precio"), precioMin, precioMax));
+        	}else if (precioMin != null) {
+        		predicates.add(builder.greaterThan(root.get("precio"), precioMin));
+			} else {
+				predicates.add(builder.lessThan(root.get("precio"), precioMax));
+        	}
         }
 
         return builder.and(predicates.toArray(new Predicate[predicates.size()]));

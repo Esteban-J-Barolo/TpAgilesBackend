@@ -1,9 +1,7 @@
 package utn.frsf.TpAgilesBackend.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import utn.frsf.TpAgilesBackend.enums.EstadoInmueble;
 import utn.frsf.TpAgilesBackend.enums.OrientacionInmueble;
 import utn.frsf.TpAgilesBackend.enums.TipoInmueble;
-import utn.frsf.TpAgilesBackend.exceptions.ClienteNotFoundException;
 import utn.frsf.TpAgilesBackend.exceptions.InmuebleNotFoundException;
 import utn.frsf.TpAgilesBackend.model.Inmueble;
 import utn.frsf.TpAgilesBackend.model.Localidad;
@@ -70,12 +67,36 @@ public class InmuebleController {
 	Inmueble replaceInmueble(@RequestBody Inmueble newInmueble, @PathVariable Long id) {
 		return inmuebleRepository.findById(id.intValue())
                 .map(inmueble -> {
-                	inmueble.setProvincia(newInmueble.getProvincia());
-                	inmueble.setLocalidad(newInmueble.getLocalidad());
-                	inmueble.setBarrio(newInmueble.getBarrio());
-                	inmueble.setTipo(newInmueble.getTipo());
-                	inmueble.setPrecio(newInmueble.getPrecio());
-                	inmueble.setEstado(newInmueble.getEstado());
+                	inmueble.setPropietario(newInmueble.getPropietario());
+                    inmueble.setFechaCreacion(newInmueble.getFechaCreacion());
+                    inmueble.setEstado(newInmueble.getEstado());
+                    inmueble.setProvincia(newInmueble.getProvincia());
+                    inmueble.setLocalidad(newInmueble.getLocalidad());
+                    inmueble.setCalleNumero(newInmueble.getCalleNumero());
+                    inmueble.setPiso(newInmueble.getPiso());
+                    inmueble.setBarrio(newInmueble.getBarrio());
+                    inmueble.setTipo(newInmueble.getTipo());
+                    inmueble.setPrecio(newInmueble.getPrecio());
+                    inmueble.setOrientacion(newInmueble.getOrientacion());
+                    inmueble.setFrente(newInmueble.getFrente());
+                    inmueble.setFondo(newInmueble.getFondo());
+                    inmueble.setSuperficie(newInmueble.getSuperficie());
+                    inmueble.setHorizontal(newInmueble.isHorizontal());
+                    inmueble.setAntiguedad(newInmueble.getAntiguedad());
+                    inmueble.setDormitorios(newInmueble.getDormitorios());
+                    inmueble.setBanios(newInmueble.getBanios());
+                    inmueble.setCochera(newInmueble.isCochera());
+                    inmueble.setPatio(newInmueble.isPatio());
+                    inmueble.setPiscina(newInmueble.isPiscina());
+                    inmueble.setAguaCorriente(newInmueble.isAguaCorriente());
+                    inmueble.setCloacas(newInmueble.isCloacas());
+                    inmueble.setGasNatural(newInmueble.isGasNatural());
+                    inmueble.setAguaCaliente(newInmueble.isAguaCaliente());
+                    inmueble.setTelefono(newInmueble.isTelefono());
+                    inmueble.setLavadero(newInmueble.isLavadero());
+                    inmueble.setPavimento(newInmueble.isPavimento());
+                    inmueble.setLinkImagen(newInmueble.getLinkImagen());
+                    inmueble.setLinkVideo(newInmueble.getLinkVideo());
                     return inmuebleRepository.saveAndFlush(inmueble);
                 }).orElseGet(() -> {
                 	newInmueble.setId(id.intValue());
@@ -118,6 +139,11 @@ public class InmuebleController {
 	@GetMapping("/inmuebles/localidades")
 	public Iterable<Localidad> getAllLocalidades() {
 	    return localidadRepository.findAll();
+	}
+	
+	@GetMapping("/inmuebles/localidades/provincia")
+	public Iterable<Localidad> getAllLocalidades(@RequestParam("provinciaId") Long provinciaId) {
+	    return localidadRepository.findByProvinciaId(provinciaId);
 	}
 
 }

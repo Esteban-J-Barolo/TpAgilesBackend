@@ -118,6 +118,7 @@ public class ClienteControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(idList)))
                 .andExpect(status().isOk());
+        
         // Verifica que se lanzó una excepción para el ID 4
         assertThrows(ServletException.class, () -> {
             mockMvc.perform(delete("/clientes")

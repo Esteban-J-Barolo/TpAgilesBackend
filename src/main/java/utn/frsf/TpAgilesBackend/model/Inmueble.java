@@ -8,7 +8,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import utn.frsf.TpAgilesBackend.enums.EstadoInmueble;
 import utn.frsf.TpAgilesBackend.enums.OrientacionInmueble;
 import utn.frsf.TpAgilesBackend.enums.TipoInmueble;
@@ -20,15 +22,19 @@ public class Inmueble {
 	private Integer id;
 
 	@ManyToOne
-	private Cliente propietario;
+	private Propietario propietario;
 
 	private LocalDate fechaCreacion;
 
 	@Enumerated(EnumType.STRING)
 	private EstadoInmueble estado;
-
-	private String provincia;
-	private String localidad;
+	
+	@ManyToOne
+	private Provincia provincia;
+	
+	@ManyToOne
+	private Localidad localidad;
+	
 	private String calleNumero;
 	private String piso;
 	private String barrio;
@@ -56,7 +62,8 @@ public class Inmueble {
 	private boolean lavadero;
 	private boolean pavimento;
 
-	private String linkImagen;
+	private String[] linkImagen;
+	private String linkVideo;
 
 	public Inmueble() {
 		super();
@@ -70,11 +77,11 @@ public class Inmueble {
 		this.id = id;
 	}
 
-	public Cliente getPropietario() {
+	public Propietario getPropietario() {
 		return propietario;
 	}
 
-	public void setPropietario(Cliente propietario) {
+	public void setPropietario(Propietario propietario) {
 		this.propietario = propietario;
 	}
 
@@ -94,19 +101,19 @@ public class Inmueble {
 		this.estado = estado;
 	}
 
-	public String getProvincia() {
+	public Provincia getProvincia() {
 		return provincia;
 	}
 
-	public void setProvincia(String provincia) {
+	public void setProvincia(Provincia provincia) {
 		this.provincia = provincia;
 	}
 
-	public String getLocalidad() {
+	public Localidad getLocalidad() {
 		return localidad;
 	}
 
-	public void setLocalidad(String localidad) {
+	public void setLocalidad(Localidad localidad) {
 		this.localidad = localidad;
 	}
 
@@ -294,12 +301,21 @@ public class Inmueble {
 		this.pavimento = pavimento;
 	}
 
-	public String getLinkImagen() {
+	public String[] getLinkImagen() {
 		return linkImagen;
 	}
 
-	public void setLinkImagen(String linkImagen) {
+	public void setLinkImagen(String[] linkImagen) {
 		this.linkImagen = linkImagen;
 	}
+
+	public String getLinkVideo() {
+		return linkVideo;
+	}
+
+	public void setLinkVideo(String linkVideo) {
+		this.linkVideo = linkVideo;
+	}
+
 	
 }
