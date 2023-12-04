@@ -42,6 +42,12 @@ public class InmuebleController {
 	Iterable<Inmueble> allInmueble() {
 		return inmuebleRepository.findAll();
 	}
+	
+	@GetMapping("/inmuebles/{id}")
+	Inmueble getInmuebleById(@PathVariable Integer id) {
+        return inmuebleRepository.findById(id)
+                .orElseThrow(() -> new InmuebleNotFoundException(id));
+    }
 
 	@PostMapping("/inmuebles")
 	Inmueble newInmueble(@RequestBody Inmueble newInmueble) {
